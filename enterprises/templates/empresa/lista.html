@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+   <div class="col-md-7 table">
+         <div class="card tabla-empresas">
+            <div class="card-header">
+            <h3 class="card-title">Enterprise List</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <form class="ml-3" method="GET">
+              <label style="font-weight: bold;">Buscar por nombre:</label>
+               <div class="row search-bar mb-3">
+                  <div class="input-group input-group-sm col-md-5">
+                    {{ filter.form.nombre }}
+                    <i class="fa fa-search"></i>
+                  </div>
+               </div>
+            <!-- </div> -->
+                <div class="row">
+
+                    <div class="col-sm-3">
+                      <!-- select -->
+                      <div class="form-group">
+                        <label>Población</label>
+                        {{ filter.form.poblacion }}
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <!-- select -->
+                      <div class="form-group">
+                        <label>Sector</label>
+                        {{ filter.form.sector }}
+                      </div>
+                    </div>
+                </div>
+
+                <div class="row filter-button mb-3" style="justify-content: center;">
+                  <input class="btn btn-primary" type="submit" value="Filtrar">
+                </div>
+
+              </form>
+              
+               <table class="table">
+                  <thead>
+                  <tr>
+                     <th scope="col">Empresa</th>
+                     <th scope="col">Poblacion</th>
+                     <th scope="col">Partidas</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    {% for obj in object_list %}
+                      <tr>
+                        <td>{{ obj.nombre }}</td>
+                        <td>{{ obj.poblacion }}</td>
+                        <td>{{ obj.partidas }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+               </table>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer clearfix">          
+              <ul class="pagination pagination-sm m-0 float-right">
+                {% if page_obj.has_previous %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">«</a></li>
+                {% endif %}
+                
+                {% for i in page_obj.paginator.page_range %}
+                  {% if page_obj.number == i %}
+                    <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                  {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">»</a></li>
+                {% endif %}
+              </ul>
+            </div>
+         </div>
+   </div>
+
+{% endblock content %}

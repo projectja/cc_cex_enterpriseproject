@@ -1,0 +1,21 @@
+.tabla-empresas {
+   margin: 3rem;
+}
+
+table th{
+   font-size: .8rem;
+   text-align: center;
+}
+
+table td{
+   font-size: .8rem;
+   text-align: center;
+}
+
+.form-group {
+   font-size: .8rem;
+}
+
+.form-group label {
+   font-weight: bold;
+}
