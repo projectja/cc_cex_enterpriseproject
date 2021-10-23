@@ -2,6 +2,10 @@
    margin: 3rem;
 }
 
+#EmpresaList tbody tr {
+   cursor: pointer;
+}
+
 table th{
    font-size: .8rem;
    text-align: center;
@@ -19,3 +23,12 @@ table td{
 .form-group label {
    font-weight: bold;
 }
+
+.info-text h3{
+   padding-top: 16.5rem;
+   color: #bfbebe;
+   font-style: oblique;
+   font-weight: 400;
+   text-align: center;
+}
+
