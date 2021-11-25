@@ -5,62 +5,210 @@
 <section id="TablaEmpresa">
   <div class="container">
       <div class="row">
-        <div class="col-md-7 table">
+        <div class="col-md-4">
+          <div class="card filter" style="margin-top: 3rem;">
+            <div class="card-header">
+              <h3 class="card-title">Filtros</h3>
+            </div>
+            <div class="filter-trash">
+              <button type="button" class="btn btn-primary clear-filters">
+                Limpiar filtros <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            <form action="." id="FilterForm">
+              {% csrf_token %}
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="col-sm-12">
+                  <div class="accordion" id="accordionExample">
+                    <div class="card">
+                      <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Sector y Productos
+                          </button>
+                        </h2>
+                      </div>
+                  
+                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+                        <div class="card-body">
+                          <div class="item-filter">
+                            <label for="query" class="filter-label" >Buscar</label>
+                            {{ form.query }}
+                          </div>
+                          <div class="item-filter">
+                            <label for="sector_actividad" class="filter-label">Sector de actividad</label>
+                            {{ form.sector_actividad }}
+                          </div>
+                          <div class="item-filter">
+                            <label for="direccion_actividad" class="filter-label">Direccion de actividad</label>
+                            {{ form.direccion_actividad }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header" id="headingTwo">
+                        <h2 class="mb-0">
+                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Dimensión
+                          </button>
+                        </h2>
+                      </div>
+                      <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo">
+                        <div class="card-body">
+                          <div class="item-filter">
+                            <label for="empleados_fijos" class="filter-label">Numero de empleados fijos</label>
+                            <ul id="id_empleados_fijos" style="list-style: none;">
+                              {% for value, name in form.fields.empleados_fijos.choices %}
+                                <li>
+                                  <label for="id_empleados_fijos_{{forloop.counter}}">
+                                    <input type="radio" name="empleados_fijos" value="{{ value }}" id="id_empleados_fijos_{{forloop.counter}}">
+                                    {{ name }}
+                                  </label>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                          <div class="item-filter">
+                            <label for="empleados_eventuales" class="filter-label">Numero de empleados eventuales</label>
+                            <ul id="id_empleados_eventuales" style="list-style: none;">
+                              {% for value, name in form.fields.empleados_eventuales.choices %}
+                                <li>
+                                  <label for="id_empleados_eventuales_{{forloop.counter}}">
+                                    <input type="radio" name="empleados_eventuales" value="{{ value }}" id="id_empleados_eventuales_{{forloop.counter}}">
+                                    {{ name }}
+                                  </label>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                          <div class="item-filter">
+                            <label for="volumen_facturacion" class="filter-label">Volumen de Facturación</label>
+                            <ul id="id_volumen_facturacion" style="list-style: none;">
+                              {% for value, name in form.fields.volumen_facturacion.choices %}
+                                <li>
+                                  <label for="id_volumen_facturacion_{{forloop.counter}}">
+                                    <input type="radio" name="volumen_facturacion" value="{{ value }}" id="id_volumen_facturacion_{{forloop.counter}}">
+                                    {{ name }}
+                                  </label>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card">
+                      <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Perfil Exportador
+                          </button>
+                        </h2>
+                      </div>
+                      <div id="collapseThree" class="collapse show" aria-labelledby="headingThree">
+                        <div class="card-body">
+                          <div class="item-filter">
+                            <label for="export_frecuencia" class="filter-label">Frecuencia de Exportación</label>
+                            <ul id="id_export_frecuencia" style="list-style: none;">
+                              {% for value, name in form.fields.export_frecuencia.choices %}
+                                <li>
+                                  <label for="id_export_frecuencia_{{forloop.counter}}">
+                                    <input type="radio" name="export_frecuencia" value="{{ value }}" id="id_export_frecuencia_{{forloop.counter}}">
+                                    {{ name }}
+                                  </label>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                          <div class="item-filter">
+                            <label for="export_relativa" class="filter-label">Exportación relativa (%)</label>
+                            {{ form.export_relativa }}
+                          </div>
+                          <div class="item-filter">
+                            <label for="export_destino" class="filter-label">Destino de exportación</label>
+                              {{ form.export_destino }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-8 table">
+          <!-- <div class="row row-tag-selected">
+            <div class="col-md-5">
+               <div class="tag-selected">
+               </div>
+            </div>
+         </div> -->
           <div class="card tabla-empresas">
             <div class="card-header">
             <h3 class="card-title">Enterprise List</h3>
             </div>
+            <div id="result-count" class="text-right">
+              <span class='font-weight-bold'></span> results found.
+            </div>
+            <div id="page-count" class="text-right">Page:
+                <span class='font-weight-bold'></span>
+            </div>
             <div class="card-body">
-              <form class="ml-3" method="GET" id="filterForm"> 
-                <div class="row">
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>Orden Alfabético</label>
-                      {{ form.alpha }}
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group" style="
-                    margin-top: 1.2rem;">
-                      <label>Población</label>
-                      {{ form.poblacion }}
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group" style="
-                    margin-top: 1.2rem;">
-                      <label>Sector</label>
-                      {{ form.sector }}
-                    </div>
+                <div class="table-responsive">
+                  <table class="table table-light table-bordered table-hover" data-toggle="table" id="EmpresaList">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Sector de Actividad</th>
+                            <th scope="col">Ubicacion</th>
+                            <th scope="col">Paises Operacion</th>
+                            <th scope="col">Numero de Empleados</th>
+                            <th scope="col">Volumen de Facturacion</th>
+                            <th scope="col">Frecuencia de Exportacion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_body">
+                    </tbody>
+                  </table>
+                  <div id="hidden-spinner" class="row">
+                    <div class="spinner-border text-dark" role="status"></div>
                   </div>
                 </div>
-                <div class="row filter-button mb-3" style="justify-content: center;">
-                  <input class="btn btn-primary" type="button" id="btnFilter" value="Filtrar">
-                </div>
-              </form>
-                <table class="table" id="EmpresaList">
-                  <thead>
-                    <tr>
-                      <th scope="col">Empresa</th>
-                      <th scope="col">Poblacion</th>
-                      <th scope="col">Partidas</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
+            </div>
+            <div class="row pagination-box" style="justify-content: center">
             </div>
 
           </div>
         </div>
-        <div class="col-md-4" id="cardEmpresaDetalle">
-          <div class="info-text">
-            <h3>PULSE EN CUALQUIER EMPRESA DE LA TABLA DE LA IZQUIERDA PARA VER AQUI SU INFORMACION DETALLADA</h3>
-          </div>
-        </div>
+
       </div>
   </div>
 </section>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="ModalBody">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
 
 
