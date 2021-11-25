@@ -1,7 +1,27 @@
 .tabla-empresas {
-   margin: 3rem;
+   margin-top: 3rem;
+   margin-left: 3rem;
+   margin-right: 3rem;
 }
 
+.filter-trash {
+   text-align: center;
+   margin-top: 1rem;
+}
+
+
+#TablaEmpresa {
+   margin-top: 4rem;
+}
+
+
+.row-tag-selected{
+   background-color:#d3d0d0;
+   position: absolute;
+   width: 83.8%;
+   margin-left: 48px;
+   border-radius: 5px;
+}
 #EmpresaList tbody tr {
    cursor: pointer;
 }
@@ -32,3 +52,13 @@ table td{
    text-align: center;
 }
 
+#hidden-spinner {
+   justify-content: center;
+   margin-top: .2rem;
+   margin-bottom: .2rem;
+   /* display: none; */
+}
+
+#FilterForm .filter-label {
+   font-weight: bold;
+}
