@@ -17,20 +17,25 @@ function get_list_url(page, query) {
    return url
 }
 
+function create_detail_url(detail_url){
+   url = window.location.origin
+   url += `${detail_url}`
+   return url
+}
+
 function putTableData(data) {
    let row;
    $("#table_body").html("");
    tbody = $("#table_body")
-
+   var url = 'https://open.spotify.com/genre/fresh_finds-page'
    if (data['results'].length > 0){
       $.each(data['results'], function (a, b){
-         row = "<tr data-val="+b.id+"> <td>" + b.name + "</td>" +
+         row = "<tr id="+b.id+"><td style='display:none;'>" + b.logo + "</td>" +
+               "<td>" + b.name + "</td>" +
                "<td>" + b.sector_actividad + "</td>" +
                "<td>" + b.direccion_actividad + "</td>" +
                "<td>" + b.export_destino + "</td>" +
-               "<td>" + b.empleados_fijos + "</td>" +
-               "<td>" + b.volumen_facturacion + "</td>" +
-               "<td>" + b.export_frecuencia + "</td>"
+               "<td style='display:none;'>" + b.obj_absolute_url + "</td>" 
          tbody.append(row);
 
       });
@@ -136,133 +141,136 @@ function create_pagination_control(data){
 function create_card_info(data){
    // Create a card where enterprise
    // info goes.
+   logo_url = data.childNodes[0].innerText
+   empresa_name = data.childNodes[1].innerText
+   sector_actividad = data.childNodes[2].innerText
+   ubicacion = data.childNodes[3].innerText
+   pais_operacion = data.childNodes[4].innerText
+   numero_empleados = data.childNodes[5].innerText
+   volumen_facturacion = data.childNodes[6].innerText
+   frecuencia_exportacion = data.childNodes[7].innerText
+   obj_absolute_url = data.childNodes[8].innerText
+
+   list_country_op = pais_operacion.split(',')
+
+   
    $("#ModalBody").html("")
-
-   // div with card class.
-   card = document.createElement('div')
-   card.classList.add("card", "detalle-empresa")
-
-   // add card-header with h3 for title.
-   header = document.createElement('div')
-   header.classList.add("card-header")
-
-   h3 = document.createElement('h3')
-   h3.classList.add("card-title")
-   h3.innerHTML = "Detalle"
-
-   header.appendChild(h3)
-   card.appendChild(header)
-
-   // add card-body
-   card_body = document.createElement('div')
-   card_body.classList.add("card-body")
+   modal_header = document.getElementById('exampleModalLabel')
+   modal_header.innerHTML= "Detalles"
 
    div1 = document.createElement("div")
    div1.classList.add("col-12", "order-1", "order-md-2")
 
-   title = document.createElement("h3")
-   title.classList.add("text-primary")
-   title.innerHTML = "data.nombre"
+   row = document.createElement("div")
+   row.setAttribute("class", "row")
+   div1.appendChild(row)
+   
+   logo_col_div = document.createElement("div")
+   logo_col_div.setAttribute("class", "col-md-4")
+   row.appendChild(logo_col_div)
+
+   logo = document.createElement("img")
+   logo.classList.add("img-fluid", "rounded-circle", "mb-4")
+   logo.setAttribute("src", logo_url)
+   logo_col_div.appendChild(logo)
+
+   enterprise_info_div = document.createElement("div")
+   enterprise_info_div.classList.add("col-md-8", "enterprise-info")
+   row.appendChild(enterprise_info_div)
+   
+
+   h3 = document.createElement("h3")
+   h3.setAttribute("class", "text-primary")
+   h3.innerHTML = empresa_name
+   enterprise_info_div.appendChild(h3)
 
    p = document.createElement("p")
    p.classList.add("text-muted")
    p.innerHTML = "Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terr."
+   enterprise_info_div.appendChild(p)
 
    br = document.createElement("br")
+   div1.appendChild(br)
 
    div2 = document.createElement("div")
    div2.classList.add("text-muted")
+   div1.appendChild(div2)
 
    p2 = document.createElement("p")
    p2.classList.add("text-sm")
-   p2.innerHTML = "Poblacion"
-   
+   p2.innerHTML = "Sector de actividad"
+   div2.appendChild(p2)
+
    b1 = document.createElement("b")
    b1.classList.add("d-block")
-   b1.innerHTML = "data.poblacion.nombre"
+   b1.innerHTML = sector_actividad
+   p2.appendChild(b1)
+
 
    p3 = document.createElement("p")
    p3.classList.add("d-block")
-   p3.innerHTML = "Partidas"
+   p3.innerHTML = "Direccion de actividad"
+   div2.appendChild(p3)
 
    b2 = document.createElement("b")
    b2.classList.add("d-block")
-   b2.innerHTML = "data.partidas"
+   b2.innerHTML = ubicacion
+   p3.appendChild(b2)
 
    h5 = document.createElement("h5")
    h5.classList.add("mt-5", "text-muted")
-   h5.innerHTML = "Project files"
-
-   ul = document.createElement("ul")
-   ul.classList.add("list-unstyled")
-
-   li1 = document.createElement("li")
-   a1 = document.createElement("a")
-   a1.href = "#"
-   a1.classList.add("btn-link", "text-secondary")
-   a1.innerHTML = "Functional-requirements.docx"
-
-   li1.appendChild(a1)
-
-   li2 = document.createElement("li")
-   a2 = document.createElement("a")
-   a2.href = "#"
-   a2.classList.add("btn-link", "text-secondary")
-   a2.innerHTML = "UAT.pdf"
-
-   li2.appendChild(a2)
-
-   li3 = document.createElement("li")
-   a3 = document.createElement("a")
-   a3.href = "#"
-   a3.classList.add("btn-link", "text-secondary")
-   a3.innerHTML = "Email-from-flatbal.mln"
-
-   li3.appendChild(a3)
-
-   li4 = document.createElement("li")
-   a4 = document.createElement("a")
-   a4.href = "#"
-   a4.classList.add("btn-link", "text-secondary")
-   a4.innerHTML = "Logo.png"
-
-   li4.appendChild(a4)
-
-   li5 = document.createElement("li")
-   a5 = document.createElement("a")
-   a5.href = "#"
-   a5.classList.add("btn-link", "text-secondary")
-   a5.innerHTML = "Contract-10_12_2014.docx"
-
-   li5.appendChild(a5)
-
-   ul.appendChild(li1)
-   ul.appendChild(li2)
-   ul.appendChild(li3)
-   ul.appendChild(li4)
-   ul.appendChild(li5)
-
-   p3.appendChild(b2)
-   p2.appendChild(b1)
-   div2.appendChild(p2)
-   div2.appendChild(p3)
-
-   div1.appendChild(title)
-   div1.appendChild(p)
-   div1.appendChild(br)
-   div1.appendChild(div2)
+   h5.innerHTML = "Pais de Operacion"
    div1.appendChild(h5)
 
+   operation_country_list = document.createElement("div")
+   operation_country_list.setAttribute("class", "operation-country-list")
+
+   ul = document.createElement("ul")
+   ul.setAttribute("class", "list-unstyled")
+
+   list_country_op.forEach(function(country){
+      li = document.createElement('li')
+      li.setAttribute("class", "list-text-secondary")
+      li.innerHTML += country
+      ul.appendChild(li)
+   });
    div1.appendChild(ul)
 
-   card.appendChild(div1)
+
+   detail_url = create_detail_url(obj_absolute_url)
+
+   to_detail = document.createElement("a")
+   to_detail.classList.add("text-decoration-none", "call-to-action")
+   to_detail.setAttribute("href", detail_url)
+   to_detail.setAttribute("target", "_blank")
+   to_detail.innerHTML = "Saber más"
+   div1.appendChild(to_detail)
+
+   icon = document.createElement("span")
+   icon.innerHTML = " ⟶"
+   to_detail.appendChild(icon)
+
+   
 
    card_detalle = document.getElementById("ModalBody")
-   card_detalle.appendChild(card)
+   card_detalle.appendChild(div1)
 
    return card_detalle
 
 }
+
+$('.select2').select2({
+   theme: 'bootstrap4',
+   language: 'es',
+   placeholder: "Seleccione una Opcion",
+}).select2('data', null)
+
+
+$("#FilterForm input, select").change(function (e){
+   form_data = $("#FilterForm").serialize();
+   get_datatable(get_list_url(1, form_data))
+
+});
 
 $(document).on("click", ".page-link", function (e) {
    e.preventDefault();
@@ -276,15 +284,16 @@ $(document).on("click", ".page-link", function (e) {
 
 })
 
-$('.select2').select2({
-   theme: 'bootstrap4',
-   language: 'es',
-   placeholder: "Seleccione una Opcion",
-}).select2('data', null)
+$(".clear-filters").on("click", function(e){
+   $("#FilterForm").trigger("reset");
+   get_datatable(get_list_url(1));
+
+});
 
 $('#EmpresaList tbody').on('click', 'tr', function () {
-   // console.log($(this).attr('data-val'))
-   card_detail = create_card_info();
+   var tr_id = $(this).attr('id')
+   var obj_data = document.getElementById(tr_id);
+   card_detail = create_card_info(obj_data);
 
    $('#myModal').modal('show')
    $('#ModalBody').append(card_detail)
@@ -308,17 +317,9 @@ timer = window.setTimeout(() => {
 
 });
 
-$("#FilterForm input, select").change(function (e){
-   form_data = $("#FilterForm").serialize();
-   get_datatable(get_list_url(1, form_data))
 
-});
 
-$(".clear-filters").on("click", function(e){
-   $("#FilterForm").trigger("reset");
-   get_datatable(get_list_url(1));
 
-});
 
 // function removeItem(id){
 //    var multi_select_tags = $(".tag-selected");
