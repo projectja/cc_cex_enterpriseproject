@@ -1,6 +1,14 @@
 from django.db import models
+from django.urls import reverse
+from django.template.defaultfilters import slugify
 from django.core.validators import RegexValidator
+from django_countries.fields import CountryField
 
+
+from PIL import Image
+
+
+from .resizer import ResizeImageMixin
 from .constants import (
    PRODUCTOS_SERVICIOS,
    PYME, EMP_FIJOS,
@@ -13,20 +21,6 @@ from .constants import (
 regex_phone = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="EL numero de telefono debe ser en el formato de: +9999999999.")
 
 
-
-
-class Countries(models.Model):
-   """
-      Modelo que proporciona
-      todos los paises, listados
-      en el package django_country
-   """
-   name = models.CharField(max_length=100)
-   code = models.CharField(max_length=3)
-
-
-   def __str__(self):
-      return self.name
 
 
 class Provincia(models.Model):
@@ -73,13 +67,15 @@ class Product(models.Model):
    """
    name = models.CharField(max_length=100)
    taric = models.IntegerField()
+   marca = models.ForeignKey('Marca', on_delete=models.SET_NULL, null=True)
+   empresa = models.ForeignKey('Empresa', on_delete=models.CASCADE, related_name="productos_servicios")
 
 
    def __str__(self):
       return f"{self.taric} - {self.name}"
 
 
-class Empresa(models.Model):
+class Empresa(models.Model, ResizeImageMixin):
    """   
       Representa un registro de una empresa en la base de datos.
       Con todas sus descripciones; actividades, datos generales,
@@ -124,18 +120,26 @@ class Empresa(models.Model):
 
    # Datos sobre exportacion.
    export_frecuencia = models.CharField(max_length=2, choices=FREQ_EXPORT)
-   export_relativa = models.PositiveSmallIntegerField()
+   export_relativa = models.CharField(max_length=3, choices=VOL_FACT)
    export_vol = models.PositiveSmallIntegerField()
-   export_destino = models.ManyToManyField(Countries)
-   
-   # Productos y Servicios.
-   productos_servicios = models.ManyToManyField(Product)
-   marcas_comerciales = models.ManyToManyField(Marca)
+   export_destino = CountryField(multiple=True)
 
+
+
+   class Meta:
+      ordering = ('name',)
+      indexes = [
+         models.Index(fields=['cif'], name="empresa_idx")
+      ]
+   
+
+   def save(self, *args, **kwargs):
+      if self.pk is None and self.logo:
+         self.resize(self.logo, (200, 200), self.name)
+      super().save(*args, **kwargs)
 
    def __str__(self):
       return self.name
 
-   
-   class Meta:
-      ordering = ('name',)
+   def get_absolute_url(self):
+      return reverse('empresa_detail', kwargs={'pk': self.pk})

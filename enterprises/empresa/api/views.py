@@ -10,7 +10,6 @@ from django.db import connection
 
 
 class ApiEmpresaList(ListAPIView):
-
    serializer_class = EmpresaSerializer
    pagination_class = CustomPagination
 
@@ -35,15 +34,18 @@ class ApiEmpresaList(ListAPIView):
       export_relativa = self.request.GET.get('export_relativa')
       export_destino = self.request.GET.getlist('export_destino')
 
-      queryset = Empresa.objects.all()
-      
+
+      queryset = Empresa.objects.all().prefetch_related(
+         'direccion_actividad' 
+      )
+
 
       if query is not None and query != '':
          queryset = queryset.filter(
             Q(name__icontains=query) | 
             Q(productos_servicios__name__icontains=query) | 
-            Q(productos_servicios__taric__icontains=query)| 
-            Q(marcas_comerciales__name__icontains=query)
+            Q(productos_servicios__taric__icontains=query) |
+            Q(productos_servicios__marca__name__icontains=query)
          ).distinct()
 
       if sector_actividad and sector_actividad != '':
@@ -77,6 +79,6 @@ class ApiEmpresaList(ListAPIView):
 
       if export_destino and export_destino != ['']:
          queryset = queryset.filter(
-            export_destino__in=export_destino)
+            export_destino__code__in=export_destino)
 
       return queryset

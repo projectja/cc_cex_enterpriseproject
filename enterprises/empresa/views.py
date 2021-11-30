@@ -18,3 +18,7 @@ class TablaEmpresaView(TemplateView):
       context['form'] = form
       
       return context
+
+
+class EmpresaDetailView(TemplateView):
+   template_name = 'empresa/detail.html'

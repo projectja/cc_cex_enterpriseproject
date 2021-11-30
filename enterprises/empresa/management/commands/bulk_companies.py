@@ -30,7 +30,7 @@ EMAIL_EMPRESA = "test@email.com"
 PERSONA_CONTACT = "David Tester"
 DIRECCION_FISCAL = "221b Baker Street"
 
-PATH_TEST = r"C:\Users\Familia Navas\Desktop\Dave File's\Practicas_programacion\Dummy names for random factory\test_names.txt"
+PATH_TEST = r"C:\Users\Familia Navas\Desktop\Dave's Files\Practicas_programacion\Dummy names for random factory\test_names.txt"
 
 LISTA_PRODUCTOS_SERVICIOS_OPTIONS = [ps[0] for ps in PRODUCTOS_SERVICIOS]
 LISTA_EMPLEADOS_FIJOS_OPTIONS = [ef[0] for ef in EMP_FIJOS]
@@ -40,10 +40,9 @@ LISTA_FRECUENCIA_EXPORTACION_OPTIONS = [fe[0] for fe in FREQ_EXPORT]
 
 LISTA_PORCENTAJES = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
-LISTA_DIRECCION_ACTIVIDAD_OPTIONS = list(Municipio.objects.all())
-LISTA_PRODUCTOS_SERVICIOS = list(Product.objects.all())
-LISTA_MARCA = list(Marca.objects.all())
-LISTA_COUNTRIES_EXPORTACION_DESTINO = list(Countries.objects.all())
+# LISTA_DIRECCION_ACTIVIDAD_OPTIONS = list(Municipio.objects.all())
+# LISTA_PRODUCTOS_SERVICIOS = list(Product.objects.all())
+# LISTA_COUNTRIES_EXPORTACION_DESTINO = list(Countries.objects.all())
 
 
 def get_random_productos_servicios():
@@ -75,17 +74,14 @@ def get_is_pyme():
    options = [0, 1]
    return random.choice(options)
 
-def get_random_direccion_actividad():
-   return random.sample(LISTA_DIRECCION_ACTIVIDAD_OPTIONS, 4)
+# def get_random_direccion_actividad():
+#    return random.sample(LISTA_DIRECCION_ACTIVIDAD_OPTIONS, 4)
 
-def get_random_countries_exportacion_destino():
-   return random.sample(LISTA_COUNTRIES_EXPORTACION_DESTINO, 4)
+# def get_random_countries_exportacion_destino():
+#    return random.sample(LISTA_COUNTRIES_EXPORTACION_DESTINO, 4)
 
-def get_random_productos():
-   return random.sample(LISTA_PRODUCTOS_SERVICIOS, 4)
-
-def get_random_marca():
-   return random.sample(LISTA_MARCA, 4)
+# def get_random_productos():
+#    return random.sample(LISTA_PRODUCTOS_SERVICIOS, 4)
 
 
 def save_company_data(name):
@@ -120,7 +116,6 @@ class Command(BaseCommand):
          laps = 0
          iterator = 0
 
-         random_names_bucket = ''
          company_names_list = list(company_names)
 
          while laps < turns:

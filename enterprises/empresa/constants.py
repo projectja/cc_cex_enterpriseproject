@@ -60,3 +60,4 @@ FREQ_EXPORT = (
    ('EO', 'Exportadora ocasional'),
    ('EP', 'Empresa con potencial exportador'),
 )
+

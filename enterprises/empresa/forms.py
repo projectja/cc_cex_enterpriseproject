@@ -1,10 +1,10 @@
 from django import forms
-from django_countries.fields import CountryField
+from django_countries import countries
 from django_countries.widgets import CountrySelectWidget
 
 
 from .models import (
-   Municipio, Empresa, Countries
+   Municipio, Empresa,
 )
 
 
@@ -14,16 +14,23 @@ from .constants import (
    VOL_FACT, FREQ_EXPORT,
 )
 
-
 DIRECCION_ACTIVIDAD_CHOICES = ()
-for pk, name in Municipio.objects.values_list('id', 'nombre'):
-      municipio = (pk, name,)
-      DIRECCION_ACTIVIDAD_CHOICES += (municipio,)
-
 EXPORT_DESTINO_CHOICES = ()
-for code, name in Countries.objects.values_list('code', 'name'):
-      country = (code, name,)
-      EXPORT_DESTINO_CHOICES += (country,)
+
+try:
+   for pk, name in Municipio.objects.values_list('id', 'nombre'):
+         municipio = (pk, name,)
+         DIRECCION_ACTIVIDAD_CHOICES += (municipio,)
+
+
+   for code, name in list(countries):
+         country = (code, name,)
+         EXPORT_DESTINO_CHOICES += (country,)
+except Exception as e:
+   print(e)
+   pass
+
+
 
 
 class Filter(forms.ModelForm):

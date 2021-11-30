@@ -62,3 +62,29 @@ table td{
 #FilterForm .filter-label {
    font-weight: bold;
 }
+
+
+/* ------- Modal Enterprise Detail -------- */
+.enterprise-info {
+   text-align: right;
+}
+
+.call-to-action {
+   cursor: pointer;
+}
+
+.detail-map {
+   border-radius: 12px;
+}
+
+.empresa-detail-row {
+   justify-content: center;
+}
+
+.empresa-detail-card {
+   bottom: 3.1em;
+}
+
+.row-extra-info {
+   margin-bottom: 3.5rem;
+}

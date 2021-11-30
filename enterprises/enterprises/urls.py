@@ -10,6 +10,7 @@ urlpatterns = [
 
     # RESTful Framework url's
     path('tabla-empresas/api/', include('empresa.api.urls')),
+
 ]
 
 if settings.DEBUG:
