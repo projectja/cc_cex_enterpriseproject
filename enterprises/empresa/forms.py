@@ -4,7 +4,7 @@ from django_countries.widgets import CountrySelectWidget
 
 
 from .models import (
-   Municipio, Empresa,
+   Municipio, Empresa, Solicitud
 )
 
 
@@ -46,8 +46,9 @@ class Filter(forms.ModelForm):
    query = forms.CharField(
       widget=forms.TextInput(
          attrs={
-            'class': 'form-control col-md-8',
-            'placeholder': 'Buscar empresas'}))
+            'class': 'form-control',
+            'placeholder': 'Buscar',
+            'autocomplete': 'off'}))
    
    direccion_actividad = forms.ChoiceField(
       choices=DIRECCION_ACTIVIDAD_CHOICES, 
@@ -103,4 +104,15 @@ class Filter(forms.ModelForm):
          'empleados_fijos', 'empleados_eventuales',
          'volumen_facturacion', 'export_relativa',
          'export_destino', 'export_frecuencia',
+      )
+
+
+class RequestEmpresaForm(forms.ModelForm):
+
+   class Meta:
+      model = Solicitud
+      fields = (
+         'request_email',
+         'request_f_name',
+         'request_l_name',
       )
