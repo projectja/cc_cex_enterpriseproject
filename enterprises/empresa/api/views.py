@@ -13,10 +13,10 @@ class ApiEmpresaList(ListAPIView):
    serializer_class = EmpresaSerializer
    pagination_class = CustomPagination
 
-   def dispatch(self, *args, **kwargs):
-      response = super().dispatch(*args, **kwargs)
-      print('Queries Counted: {}'.format(len(connection.queries)))
-      return response
+   # def dispatch(self, *args, **kwargs):
+   #    response = super().dispatch(*args, **kwargs)
+   #    print('Queries Counted: {}'.format(len(connection.queries)))
+   #    return response
 
    def get_queryset(self):
       queryset = self.get_filter_queryset()
