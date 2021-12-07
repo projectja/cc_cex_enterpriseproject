@@ -2,11 +2,19 @@
 {% load static %}
 
 {% block content %}
+
 <section id="TablaEmpresa">
-  <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card filter" style="margin-top: 3rem;">
+
+  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Open modal for @mdo</button>           -->
+  <form action="." id="FilterForm">
+    {% csrf_token %}
+      <div class="search-form">
+        {{ form.query }}
+      </div>
+
+      <div class="row filter-list-contant">
+        <div class="col-3">
+          <div class="card filter">
             <div class="card-header">
               <h3 class="card-title">Filtros</h3>
             </div>
@@ -15,16 +23,15 @@
                 Limpiar filtros <i class="fas fa-trash"></i>
               </button>
             </div>
-            <form action="." id="FilterForm">
-              {% csrf_token %}
+
               <!-- /.card-header -->
               <div class="card-body">
-                <div class="col-sm-12">
+                <div class="col-12">
                   <div class="accordion" id="accordionExample">
                     <div class="card">
                       <div class="card-header" id="headingOne">
                         <h2 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          <button class="btn btn-link btn-block text-left" type="button" aria-expanded="true" aria-controls="collapseOne">
                             Sector y Productos
                           </button>
                         </h2>
@@ -32,10 +39,6 @@
                   
                       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
                         <div class="card-body">
-                          <div class="item-filter">
-                            <label for="query" class="filter-label" >Buscar</label>
-                            {{ form.query }}
-                          </div>
                           <div class="item-filter">
                             <label for="sector_actividad" class="filter-label">Sector de actividad</label>
                             {{ form.sector_actividad }}
@@ -50,7 +53,7 @@
                     <div class="card">
                       <div class="card-header" id="headingTwo">
                         <h2 class="mb-0">
-                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          <button class="btn btn-link btn-block text-left collapsed" type="button"  aria-expanded="false" aria-controls="collapseTwo">
                             Dimensión
                           </button>
                         </h2>
@@ -102,7 +105,7 @@
                     <div class="card">
                       <div class="card-header" id="headingThree">
                         <h2 class="mb-0">
-                          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          <button class="btn btn-link btn-block text-left collapsed" type="button" aria-expanded="false" aria-controls="collapseThree">
                             Perfil Exportador
                           </button>
                         </h2>
@@ -139,18 +142,28 @@
               <!-- /.card-body -->
             </form>
           </div>
-        </div>
+        </div> 
 
-        <div class="col-md-8 table">
+
+
+        <div class="col-md-9 table">
           <!-- <div class="row row-tag-selected">
             <div class="col-md-5">
                <div class="tag-selected">
                </div>
             </div>
          </div> -->
+
           <div class="card tabla-empresas">
+            
             <div class="card-header">
-            <h3 class="card-title">Enterprise List</h3>
+              <div class="row">
+                <div class="col-8">
+                  <h3 class="card-title">Enterprise List</h3>
+                </div>
+                <div class="col-4" id="requestEnterpriseInfo">
+                </div>
+              </div>
             </div>
             <div id="result-count" class="text-right">
               <span class='font-weight-bold'></span> results found.
@@ -159,17 +172,14 @@
                 <span class='font-weight-bold'></span>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
                   <table class="table table-light table-bordered table-hover" data-toggle="table" id="EmpresaList">
                     <thead class="thead-dark">
                         <tr>
+                            <th scope="col">Option</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Sector de Actividad</th>
                             <th scope="col">Ubicacion</th>
                             <th scope="col">Paises Operacion</th>
-                            <!-- <th scope="col">Numero de Empleados</th>
-                            <th scope="col">Volumen de Facturacion</th>
-                            <th scope="col">Frecuencia de Exportacion</th> -->
                         </tr>
                     </thead>
                     <tbody id="table_body">
@@ -178,28 +188,29 @@
                   <div id="hidden-spinner" class="row">
                     <div class="spinner-border text-dark" role="status"></div>
                   </div>
-                </div>
-            </div>
-            <div class="row pagination-box" style="justify-content: center">
+
             </div>
 
+            <div class="row pagination-box" style="justify-content: center">
+            </div>
           </div>
+
         </div>
 
       </div>
-  </div>
+  <!-- </div> -->
 </section>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal Detail Enterpise -->
+<div class="modal fade" id="modalDetailEnterprise" tabindex="-1" role="dialog" aria-labelledby="modalDetailEnterpriseLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <h5 class="modal-title" id="modalDetailEnterpriseLabel"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id="ModalBody">
+      <div class="modal-body" id="modalDetailEnterpriseBody">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -207,9 +218,122 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Request Enterprise Info Form -->
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel2">Solicitar información</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13.5px;color: gray;">Le enviaremos información acerca de la empresa, de forma datalla a su correo electrónico.</p>
+        
+        <div class="row" style="justify-content: center;">
+          <div class="col-md-5">
+            <form id="requestInfoForm">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Email:</label>
+                <input type="text" class="form-control" name="request_email" id="id_request_email">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">First name:</label>
+                <input type="text" class="form-control" name="request_f_name" id="id_request_f_name">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Last name:</label>
+                <input type="text" class="form-control" name="request_l_name" id="id_request_l_name">
+              </div>
+
+            </form>
+          </div>
+
+            <div class="vl"></div>
+          
+          <div class="col-md-5">
+            <h6>Empresas seleccionadas</h6>
+              <ul class="list-group empresas-seleccionadas-list">
+              </ul>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" id="requestEmpInfoButton" class="btn btn-primary">Solicitar</button>
+        <div id="hidden-spinner2" class="row">
+          <div class="spinner-border text-dark" role="status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
 
 
 {% block extra_javascript %}
   <script src="{% static 'js/empresa/list.js' %}"></script>
+  <script>
+    $("#requestEmpInfoButton").click(function(e){
+      var request_empresa_info_serialize_form = $("#requestInfoForm").serializeArray()
+      request_empresa_info_serialize_form.push({
+          "name": "request_empresa_list",
+          "value": JSON.stringify(records_selected_list)
+      });
+
+      $("#requestEmpInfoButton").css("display","none")
+      $('#hidden-spinner2').show();
+      $.ajax({
+            url: "{% url 'request_empresa_info' %}",
+            type: "POST",
+            dataType: "json",
+            data: request_empresa_info_serialize_form,
+          success: function(response){
+            console.log(response)
+            $('#hidden-spinner2').hide();
+            $("#requestEmpInfoButton").css("display","inline-block")
+            
+            if (response["status"] == 200){
+              $("#requestInfoForm").trigger("reset");
+              $("#exampleModal .close").click()
+              Swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: response['message'],
+                  showConfirmButton: false,
+                  timer: 5500
+              })
+              setTimeout(function (){
+                  window.location.href = "{% url 'tabla_empresas' %}"
+              }, 2500);
+            } else if (response["status"] == 400 || response["status"] == 500 ){
+              var html = '';
+              if (typeof (response.error) === 'object') {
+                  html = '<ul style="text-align: center; list-style: none;">';
+                  $.each(response.error, function (key, value) {
+                      html += '<li>' + value + '</li>';
+                  });
+                  html += '</ul>';
+              } else {
+                  html = '<p>' + response.error + '</p>';
+              }
+              Swal.fire({
+                  title: 'Error!',
+                  html: html,
+                  icon: 'error'
+              });
+            }
+
+          }
+      });
+
+
+    });
+  </script>
 {% endblock extra_javascript %}
