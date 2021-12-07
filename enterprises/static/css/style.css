@@ -1,29 +1,9 @@
 .tabla-empresas {
-   margin-top: 3rem;
-   margin-left: 3rem;
-   margin-right: 3rem;
-}
-
-.filter-trash {
-   text-align: center;
-   margin-top: 1rem;
-}
-
-
-#TablaEmpresa {
-   margin-top: 4rem;
-}
-
-
-.row-tag-selected{
-   background-color:#d3d0d0;
-   position: absolute;
-   width: 83.8%;
-   margin-left: 48px;
-   border-radius: 5px;
-}
-#EmpresaList tbody tr {
-   cursor: pointer;
+   margin-top: 1.5rem;
+   margin-left: .8rem;
+   height: 38.1%;
+   /* display: inline-table; */
+   /* margin-right: .8rem; */
 }
 
 table th{
@@ -34,6 +14,59 @@ table th{
 table td{
    font-size: .8rem;
    text-align: center;
+}
+
+#EmpresaList tbody tr {
+   cursor: pointer;
+}
+
+#TablaEmpresa {
+   margin-top: 4rem;
+}
+
+#FilterForm .filter-label {
+   font-weight: bold;
+}
+
+#hidden-spinner {
+   position: absolute;
+   bottom: 50%;
+   left: 50%;
+}
+
+#requestEnterpriseInfo {
+   text-align: right;
+}
+
+.filter-trash {
+   text-align: center;
+   margin-top: 1rem;
+}
+
+.filter-list-contant {
+   width: 100%;
+   margin-left: 0 !important;
+   margin-right: 0 !important;
+}
+
+.filter {
+   margin-top: 1.5rem;
+}
+
+.search-form {
+   position: relative;
+   width: 57%;
+   justify-content: center;
+   left: 38%;
+   align-items: center;
+}
+
+.row-tag-selected{
+   /* background-color:#d3d0d0; */
+   position: absolute;
+   width: 83.8%;
+   margin-left: 48px;
+   border-radius: 5px;
 }
 
 .form-group {
@@ -52,17 +85,17 @@ table td{
    text-align: center;
 }
 
-#hidden-spinner {
-   justify-content: center;
-   margin-top: .2rem;
-   margin-bottom: .2rem;
-   /* display: none; */
+.empresas-seleccionadas-list {
+   max-width: 360px;
+   max-height: 257px;
+   overflow-y: scroll;
+   font-size: 13px;
 }
 
-#FilterForm .filter-label {
-   font-weight: bold;
-}
-
+.vl {
+   border-left: 1px solid #c2c3c2;
+   height: 18rem;
+ }
 
 /* ------- Modal Enterprise Detail -------- */
 .enterprise-info {

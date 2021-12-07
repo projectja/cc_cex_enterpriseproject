@@ -61,3 +61,8 @@ FREQ_EXPORT = (
    ('EP', 'Empresa con potencial exportador'),
 )
 
+
+STATUS_SOLICITUD = (
+   (0, 'Por confirmar'),
+   (1, 'Enviada'),
+)
