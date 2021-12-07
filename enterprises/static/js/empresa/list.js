@@ -1,8 +1,10 @@
 let timer, timeoutVal = 1000;
 var current_page = 1;
 var page_limit = 10;
+var records_selected_list = [];
 
 $('#hidden-spinner').hide();
+$('#hidden-spinner2').hide();
 
 
 function get_list_url(page, query) {
@@ -23,27 +25,39 @@ function create_detail_url(detail_url){
    return url
 }
 
+function how_row_is_checked(){
+  for (i = 0; i < records_selected_list.length; i++){
+      $('#EmpresaList input').each(function(){
+         row_id = $(this).val()
+         if (row_id === records_selected_list[i].id){
+            $(this).attr("checked", "checked")
+         }
+      })
+  }
+}
+
 function putTableData(data) {
    let row;
    $("#table_body").html("");
    tbody = $("#table_body")
-   var url = 'https://open.spotify.com/genre/fresh_finds-page'
+   
    if (data['results'].length > 0){
       $.each(data['results'], function (a, b){
-         row = "<tr id="+b.id+"><td style='display:none;'>" + b.logo + "</td>" +
-               "<td>" + b.name + "</td>" +
+         row = "<tr id="+b.id+"><td><input class='form-check-input' data-empresa-name="+ b.name+" type='checkbox' name=check"+a+" value="+b.id+" id='flexCheckDefault'></td>" +
+               "<td style='display:none;'>" + b.logo + "</td>" +
+               "<td><a href='javascript:void(0);'>" + b.name + "</a></td>" +
                "<td>" + b.sector_actividad + "</td>" +
                "<td>" + b.direccion_actividad + "</td>" +
                "<td>" + b.export_destino + "</td>" +
                "<td style='display:none;'>" + b.obj_absolute_url + "</td>" 
          tbody.append(row);
-
       });
    } else {
       $("#table_body").html("No results found.");
    }
 
-   
+   how_row_is_checked()
+
    pagination = create_pagination_control(data)
    $(".pagination-box").html("")
    $(".pagination-box").append(pagination)
@@ -58,9 +72,9 @@ function get_datatable (url) {
       method: "GET",
       url: url,
       success: function(data){
-         console.log(data)
          $('#hidden-spinner').hide();
-         current_page = parseInt(data.links.current)
+         // console.log(data);
+         current_page = parseInt(data.links.current);
          putTableData(data);
 
          $("#result-count span").html(data.count)
@@ -102,13 +116,13 @@ function create_pagination_control(data){
 
    $.each(page_links, function (id, page){
       if (page.is_break) {
-         li2 = `<li class="disabled">
-                  <button  class="page-link"><span aria-hidden="true">&hellip;</span></button>
+         li2 = `<li class="page-item disabled">
+                  <button class="page-link"><span aria-hidden="true">&hellip;</span></button>
                </li>`
       } else {
          if (page.is_active ){
             li2 = `<li class="page-item active">
-                     <button  class="page-link" id="button-${id}" data-url="${page.url}">${page.number}</button>
+                     <button class="page-link" id="button-${id}" data-url="${page.url}">${page.number}</button>
                   </li>`
          } else {
             li2 = `<li>
@@ -141,21 +155,18 @@ function create_pagination_control(data){
 function create_card_info(data){
    // Create a card where enterprise
    // info goes.
-   logo_url = data.childNodes[0].innerText
-   empresa_name = data.childNodes[1].innerText
-   sector_actividad = data.childNodes[2].innerText
-   ubicacion = data.childNodes[3].innerText
-   pais_operacion = data.childNodes[4].innerText
-   numero_empleados = data.childNodes[5].innerText
-   volumen_facturacion = data.childNodes[6].innerText
-   frecuencia_exportacion = data.childNodes[7].innerText
-   obj_absolute_url = data.childNodes[8].innerText
+   logo_url = data.childNodes[1].innerText
+   empresa_name = data.childNodes[2].innerText
+   sector_actividad = data.childNodes[3].innerText
+   ubicacion = data.childNodes[4].innerText
+   pais_operacion = data.childNodes[5].innerText
+   obj_absolute_url = data.childNodes[6].innerText
 
    list_country_op = pais_operacion.split(',')
 
    
-   $("#ModalBody").html("")
-   modal_header = document.getElementById('exampleModalLabel')
+   $("#modalDetailEnterpriseBody").html("")
+   modal_header = document.getElementById('modalDetailEnterpriseLabel')
    modal_header.innerHTML= "Detalles"
 
    div1 = document.createElement("div")
@@ -252,11 +263,36 @@ function create_card_info(data){
 
    
 
-   card_detalle = document.getElementById("ModalBody")
+   card_detalle = document.getElementById("modalDetailEnterpriseBody")
    card_detalle.appendChild(div1)
 
    return card_detalle
 
+}
+
+function create_request_info_button(){
+   request_div = document.getElementById("requestEnterpriseInfo")
+
+   button = document.createElement("button")
+   button.setAttribute("type", "button")
+   button.setAttribute("data-toggle", "modal")
+   button.setAttribute("data-target", "#exampleModal")
+   button.classList.add("btn", "btn-primary")
+   button.innerHTML = "Solicitar Información"
+
+   request_div.appendChild(button)
+}
+
+function create_list_request_info_selected(){
+   ul = $(".empresas-seleccionadas-list").html("")
+   
+   for (i=0; i < records_selected_list.length; i++){
+      li = document.createElement('li')
+      li.setAttribute("class", "list-group-item")
+      li.setAttribute("data-val", records_selected_list[i].id)
+      li.innerHTML = records_selected_list[i].name
+      ul.append(li)
+   }
 }
 
 $('.select2').select2({
@@ -264,7 +300,6 @@ $('.select2').select2({
    language: 'es',
    placeholder: "Seleccione una Opcion",
 }).select2('data', null)
-
 
 $("#FilterForm input, select").change(function (e){
    form_data = $("#FilterForm").serialize();
@@ -276,9 +311,9 @@ $(document).on("click", ".page-link", function (e) {
    e.preventDefault();
    let url = $(this).attr("data-url");
 
-   $('body,html').animate({
-      scrollTop: 0
-   }, 600);
+   // $('body,html').animate({
+   //    scrollTop: 0
+   // }, 600);
 
    get_datatable(url);
 
@@ -290,13 +325,49 @@ $(".clear-filters").on("click", function(e){
 
 });
 
-$('#EmpresaList tbody').on('click', 'tr', function () {
-   var tr_id = $(this).attr('id')
-   var obj_data = document.getElementById(tr_id);
-   card_detail = create_card_info(obj_data);
+$('#EmpresaList tbody').on('click', 'tr td', function (e) {
+   // Controla el evento de click sobre una fila o sobre 
+   // el checkbox. Si se hace click fuera del checkbox,
+   // se despliega el modal con el detalle de la empresa.
+   // Si se hace click sobre el checkbox, se añade 
+   // el id de la empresa, como posible registro
+   // para solicitar informacion.
+   var td_input = $(this).find("input")
+   var row_selected = $(this).parent().attr('id')
+   var cells = document.getElementById(row_selected);
 
-   $('#myModal').modal('show')
-   $('#ModalBody').append(card_detail)
+   // Si el evento click coincide con el input checkbox
+   if (e.target === td_input[0]){
+      if (td_input[0].checked){
+         record_select = {
+            id: td_input.val(),
+            name: cells.childNodes[2].innerText,
+         };
+         records_selected_list.push(record_select)
+         if ( records_selected_list.length === 1){
+            create_request_info_button()
+         }
+         create_list_request_info_selected()
+      } else {
+         for (i = 0; i < records_selected_list.length; i++){
+            if (records_selected_list.length === 1){
+               records_selected_list = []
+               $("#requestEnterpriseInfo").html("")
+            } else if(records_selected_list[i].id === td_input.val()){
+               records_selected_list.splice(i, 1)
+            }
+         }
+         create_list_request_info_selected()
+      }
+   // Si el evento click fue sobre una parte del row.
+   } else {
+      var tr_id = $(this).parent().attr('id')
+      var obj_data = document.getElementById(tr_id);
+      card_detail = create_card_info(obj_data);
+
+      $('#modalDetailEnterprise').modal('show')
+      $('#modalDetailEnterpriseBody').append(card_detail)
+   }
    
 });
 
@@ -319,6 +390,7 @@ timer = window.setTimeout(() => {
 
 
 
+get_datatable(get_list_url(current_page));
 
 
 // function removeItem(id){
@@ -376,5 +448,3 @@ timer = window.setTimeout(() => {
 //    })
 
 // });
-
-get_datatable(get_list_url(current_page));
