@@ -13,7 +13,7 @@ from .constants import (
    PRODUCTOS_SERVICIOS,
    PYME, EMP_FIJOS,
    EMP_EVENT, VOL_FACT,
-   FREQ_EXPORT,
+   FREQ_EXPORT, STATUS_SOLICITUD
 )
 
 
@@ -143,3 +143,23 @@ class Empresa(models.Model, ResizeImageMixin):
 
    def get_absolute_url(self):
       return reverse('empresa_detail', kwargs={'pk': self.pk})
+
+
+
+class Solicitud(models.Model):
+   """
+      Representa una solicitud de informacion del detalle
+      de una o varias empresas, seleccionadas en la tabla
+      de empresas, por parte de un usuario.
+   """
+
+   request_email = models.EmailField(max_length=254)
+   request_f_name = models.CharField(max_length=250)
+   request_l_name = models.CharField(max_length=250)
+   empresas = models.ManyToManyField(Empresa)
+   status = models.IntegerField(default=0, choices=STATUS_SOLICITUD)
+   request_date = models.DateTimeField(auto_now_add=True)
+
+
+   def __str__(self):
+      return self.request_email
