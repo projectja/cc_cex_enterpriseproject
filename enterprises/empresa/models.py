@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import model_to_dict
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 from django.core.validators import RegexValidator
@@ -75,6 +76,44 @@ class Product(models.Model):
       return f"{self.taric} - {self.name}"
 
 
+class EmpresaManager(models.Manager):
+
+   def get_data_rows(self, list_pk, *args):
+      """Return a tuple that represent a data row of each model fields to be presented in an excel table."""
+      rows = list()
+
+      # TODO Improve: as know if these fields name is part of one incoming fields.
+      choices_fields_name = [
+         "sector_actividad", "pyme", 
+         "empleados_fijos", "empleados_eventuales",
+         "volumen_facturacion", "export_frecuencia",
+         "export_relativa",
+      ]
+
+      queryset = self.get_queryset().filter(pk__in=list_pk).values(*args)
+
+      for obj in queryset:
+         for value in obj.keys():
+            if value in choices_fields_name:
+               key_option = obj[value]
+               human_redable_option = self.get_human_redable_option(key_option, value)
+               obj[value] = human_redable_option
+
+         rows.append(tuple(obj.values()))
+      return rows
+
+   def get_map_choice_options(self, field):
+      # Return a dict for a choices options.
+      return dict((k, v) for k, v in self.model._meta.get_field(field).choices)
+
+   def get_human_redable_option(self, key, field_name):
+      # Return a human redable option of a
+      # choice.
+      choices = self.get_map_choice_options(field_name)
+
+      return choices[key] 
+
+
 class Empresa(models.Model, ResizeImageMixin):
    """   
       Representa un registro de una empresa en la base de datos.
@@ -85,7 +124,7 @@ class Empresa(models.Model, ResizeImageMixin):
 
 
    # Datos Actividad
-   sector_actividad = models.CharField(max_length=5, choices=PRODUCTOS_SERVICIOS)
+   sector_actividad = models.CharField(max_length=100, choices=PRODUCTOS_SERVICIOS)
    otro_producto_servicio = models.CharField(max_length=150, null=True, blank=True)
 
    # Datos Generales.
@@ -123,6 +162,10 @@ class Empresa(models.Model, ResizeImageMixin):
    export_relativa = models.CharField(max_length=3, choices=VOL_FACT)
    export_vol = models.PositiveSmallIntegerField()
    export_destino = CountryField(multiple=True)
+
+
+   objects = EmpresaManager()
+
 
 
 
