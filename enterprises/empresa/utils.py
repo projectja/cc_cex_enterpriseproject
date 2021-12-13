@@ -11,8 +11,27 @@ from sendgrid.helpers.mail import (
 )
 
 from .models import Empresa
+from .api.serializers import EmpresaSerializerToExcel
 
 
+def get_data_rows_to_excel(id_list):
+   data = list()
+   queryset = Empresa.objects.prefetch_related('direccion_actividad').filter(pk__in=id_list)
+
+   serialize = EmpresaSerializerToExcel(queryset, many=True)
+
+   for odict in serialize.data:
+      temp_list = list()
+
+      for i in odict.values():
+         if isinstance(i, list):
+            i = ', '.join(txt for txt in i)
+
+         temp_list.append(i)
+
+      data.append(tuple(temp_list))
+   
+   return data
 
 
 def create_excel_file(id_list):
@@ -30,10 +49,19 @@ def create_excel_file(id_list):
    # TODO Default `headers` for testing.
    # It's possible improve to dinamically headers set.
    columns = [
-      "Nombre", "Sector de Actividad", "CIF", 
-      "Direccion Fiscal", "Nombre: Persona de Contecto", 
-      "Cargo: Persona de Contacto", "Nro. Empleados Fijos", 
-      "Volumen de Facturacion"
+      "Nombre", 
+      "Sector de Actividad",
+      "Direccion de Actividad",
+      "CIF",
+      "Pyme", 
+      "Dirección Fiscal", "Nombre: Persona de Contácto", 
+      "Cargo: Persona de Contácto", 
+      "Nro. Empleados Fijos",
+      "Nro. Empleados Eventuales", 
+      "Volumen de Facturación",
+      "Frecuiencia de Exportación",
+      "Exportación Relativa",
+      "Destino de Exportacion"
    ]
 
    for col_num in range(len(columns)):
@@ -41,17 +69,7 @@ def create_excel_file(id_list):
 
    font_style = xlwt.XFStyle()
 
-   # TODO Default `args_list`
-   # It's possible improve to dinamically args list.
-   args_list = [
-      "name", "sector_actividad", "cif", 
-      "direccion_fiscal", "nombre_persona_contacto", 
-      "cargo_persona_contacto", "empleados_fijos",
-      "volumen_facturacion"
-   ]
-   
-
-   rows = Empresa.objects.get_data_rows(id_list, *args_list)
+   rows = get_data_rows_to_excel(id_list)
 
    for row in rows:
       row_num += 1

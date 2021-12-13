@@ -49,3 +49,41 @@ class EmpresaSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
    def get_obj_absolute_url(self, obj):
       return obj.get_absolute_url()
+
+
+class EmpresaSerializerToExcel(CountryFieldMixin, serializers.ModelSerializer):
+   direccion_actividad = ActividadEmpresaSerializer(many=True, read_only=True)
+   sector_actividad = serializers.CharField(source='get_sector_actividad_display')
+   export_frecuencia = serializers.CharField(source='get_export_frecuencia_display')
+   volumen_facturacion = serializers.CharField(source='get_volumen_facturacion_display')
+   empleados_fijos = serializers.CharField(source='get_empleados_fijos_display')
+   pyme = serializers.CharField(source='get_pyme_display')
+   empleados_eventuales = serializers.CharField(source='get_empleados_eventuales_display')
+   export_relativa = serializers.CharField(source='get_export_relativa_display')
+
+
+   class Meta:
+      model = Empresa
+      fields = (
+         'name',
+         'sector_actividad',
+         'direccion_actividad',
+         'cif',
+         'pyme',
+         'direccion_fiscal',
+         'nombre_persona_contacto',
+         'cargo_persona_contacto',
+         'empleados_fijos',
+         'empleados_eventuales',
+         'volumen_facturacion',
+         'export_frecuencia',
+         'export_relativa',
+         'export_destino',
+      )
+
+
+   def to_representation(self, instance):
+      """Return 'export_destino' as a full name country representation"""
+      ret = super().to_representation(instance)
+      ret['export_destino'] = [dict(countries)[code] for code in ret['export_destino'] if code != '']
+      return ret
