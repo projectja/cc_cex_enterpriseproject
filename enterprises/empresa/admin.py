@@ -17,6 +17,7 @@ def send_enterprise_info(modeladmin, request, queryset):
       user_email = obj.request_email
       ids_request_emp = [emp_id[0] for emp_id in obj.empresas.values_list('id')]
       excel_file = create_excel_file(ids_request_emp)
+      obj.update(status=1)
       send_email_with_enterprise_info(user_email, excel_file)
       
 
